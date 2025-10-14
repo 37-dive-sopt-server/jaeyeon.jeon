@@ -12,8 +12,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        MemoryMemberRepository memberRepository = new MemoryMemberRepository();
-        MemberServiceImpl memberService = new MemberServiceImpl();
         MemberController memberController = new MemberController();
 
         Scanner scanner = new Scanner(System.in);
