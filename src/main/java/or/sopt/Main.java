@@ -1,10 +1,11 @@
 package or.sopt;
 
 import or.sopt.controller.MemberController;
+import or.sopt.domain.Gender;
 import or.sopt.domain.Member;
-import or.sopt.repository.MemoryMemberRepository;
-import or.sopt.service.MemberServiceImpl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -36,7 +37,49 @@ public class Main {
                         System.out.println("⚠️ 이름을 입력해주세요.");
                         continue;
                     }
-                    Long createdId = memberController.createMember(name);
+
+                    Gender gender = null;
+                    while (gender == null) {
+                        System.out.print("성별을 입력하세요 (M/F/O): ");
+                        String g = scanner.nextLine().trim().toUpperCase();
+                        switch (g) {
+                            case "M":
+                                gender = Gender.MALE;
+                                break;
+                            case "F":
+                                gender = Gender.FEMALE;
+                                break;
+                            case "O":
+                                gender = Gender.OTHER;
+                                break;
+                            default:
+                                System.out.println("❌ 유효하지 않은 성별입니다. M/F/O 중 선택해주세요.");
+                        }
+                    }
+
+                    LocalDate birthDate = null;
+                    while (birthDate == null) {
+                        System.out.print("생일을 입력하세요 (YYYY-MM-DD): ");
+                        String birth = scanner.nextLine().trim();
+                        try {
+                            birthDate = LocalDate.parse(birth);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("❌ 유효하지 않은 날짜 형식입니다. 예: 2000-01-31");
+                        }
+                    }
+
+                    String email = null;
+                    while (email == null || email.trim().isEmpty() || !email.contains("@")) {
+                        System.out.print("이메일을 입력하세요: ");
+                        String inputEmail = scanner.nextLine().trim();
+                        if (inputEmail.isEmpty() || !inputEmail.contains("@")) {
+                            System.out.println("❌ 유효하지 않은 이메일입니다. 다시 입력해주세요.");
+                        } else {
+                            email = inputEmail;
+                        }
+                    }
+
+                    Long createdId = memberController.createMember(name, gender, birthDate, email);
                     if (createdId != null) {
                         System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
                     } else {
@@ -49,7 +92,14 @@ public class Main {
                         Long id = Long.parseLong(scanner.nextLine());
                         Optional<Member> foundMember = memberController.findMemberById(id);
                         if (foundMember.isPresent()) {
-                            System.out.println("✅ 조회된 회원: ID=" + foundMember.get().getId() + ", 이름=" + foundMember.get().getName());
+                            Member m = foundMember.get();
+                            System.out.println(
+                                    "✅ 조회된 회원: ID=" + m.getId() +
+                                    ", 이름=" + m.getName() +
+                                    ", 성별=" + m.getGender() +
+                                    ", 생일=" + m.getBirthDate() +
+                                    ", 이메일=" + m.getEmail()
+                            );
                         } else {
                             System.out.println("⚠️ 해당 ID의 회원을 찾을 수 없습니다.");
                         }
@@ -65,7 +115,13 @@ public class Main {
                     else {
                         System.out.println("--- 📋 전체 회원 목록 📋 ---");
                         for (Member member : allMembers) {
-                            System.out.println("👤 ID=" + member.getId() + ", 이름=" + member.getName());
+                            System.out.println(
+                                    "👤 ID=" + member.getId() +
+                                    ", 이름=" + member.getName() +
+                                    ", 성별=" + member.getGender() +
+                                    ", 생일=" + member.getBirthDate() +
+                                    ", 이메일=" + member.getEmail()
+                            );
                         }
                         System.out.println("--------------------------");
                     }
