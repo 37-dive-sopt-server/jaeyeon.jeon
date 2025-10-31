@@ -23,6 +23,11 @@ public class MemberServiceImpl implements MemberService{
     private static long sequence = 1L;
 
     public Long join(String name, Gender gender, LocalDate birthDate, String email) {
+
+        /**
+         * Stack *10배
+         * Heap *10배
+         * */
         Member member = new Member(sequence++, name, gender, birthDate, email);
         memberRepository.save(member);
         return member.getId();
