@@ -3,8 +3,6 @@ package or.sopt.service;
 import or.sopt.domain.Gender;
 import or.sopt.domain.Member;
 import or.sopt.repository.MemberRepository;
-import or.sopt.repository.MemoryMemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

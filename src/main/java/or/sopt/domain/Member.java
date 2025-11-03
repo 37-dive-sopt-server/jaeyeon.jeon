@@ -1,14 +1,33 @@
 package or.sopt.domain;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private LocalDate birthDate;
     private String email;
+
+    @OneToMany(mappedBy = "member")
+    private List<Article> articles = new ArrayList<>();
+
+
+
+    public Member(){
+
+    }
 
     public Member(Long id, String name, Gender gender, LocalDate birthDate, String email) {
         this.id = id;
